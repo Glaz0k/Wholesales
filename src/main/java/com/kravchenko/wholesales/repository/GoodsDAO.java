@@ -2,10 +2,14 @@ package com.kravchenko.wholesales.repository;
 
 import com.kravchenko.wholesales.model.Good;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Repository
 @AllArgsConstructor
@@ -28,12 +32,7 @@ public class GoodsDAO {
         String sql = "SELECT * FROM goods " +
                 "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
-        return template.queryForObject(sql, parameterSource, (rs, rowNum) -> Good.builder()
-                .id(rs.getLong("id"))
-                .name(rs.getString("name"))
-                .priority(rs.getFloat("priority"))
-                .build()
-        );
+        return template.queryForObject(sql, parameterSource, Good.getRowMapper());
     }
 
     public void updateGood(Good good) {
@@ -52,5 +51,12 @@ public class GoodsDAO {
                 "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         template.update(sql, parameterSource);
+    }
+
+    public List< Good> readGoodsByFilter(Comparator<? super Good> cmp) {
+        String sql = "SELECT * FROM goods";
+        List<Good> goods = template.query(sql, Good.getRowMapper());
+        goods.sort(cmp);
+        return goods;
     }
 }
