@@ -13,13 +13,6 @@ import java.util.Map;
 @Builder
 public class Good {
 
-    @NonNull
-    private Long id;
-    @NonNull
-    private String name;
-    @NonNull
-    private Float priority;
-
     private static Map< String, Comparator< ? super Good > > sortProps;
 
     static {
@@ -29,8 +22,15 @@ public class Good {
         sortProps.put("PRIORITY", Comparator.comparingDouble(Good::getPriority));
     }
 
-    public static Comparator< ? super Good > getComparator(String filter) {
-        return sortProps.get(filter);
+    @NonNull
+    private Long id;
+    @NonNull
+    private String name;
+    @NonNull
+    private Float priority;
+
+    public static Comparator< ? super Good > getComparator(String fieldName) {
+        return sortProps.get(fieldName.toUpperCase());
     }
 
     public static RowMapper< Good > getRowMapper() {

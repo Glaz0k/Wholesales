@@ -2,7 +2,6 @@ package com.kravchenko.wholesales.repository;
 
 import com.kravchenko.wholesales.model.Good;
 import lombok.AllArgsConstructor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -20,7 +19,7 @@ public class GoodsDAO {
     public Long createGood(Good good) {
         String sql = "INSERT INTO goods (id, name, priority)" +
                 "VALUES (:id, :name, :priority)" +
-                "RETURNING ID";
+                "RETURNING id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", good.getId())
                 .addValue("name", good.getName())
@@ -53,9 +52,9 @@ public class GoodsDAO {
         template.update(sql, parameterSource);
     }
 
-    public List< Good> readGoodsByFilter(Comparator<? super Good> cmp) {
+    public List< Good > readGoodsByFilter(Comparator< ? super Good > cmp) {
         String sql = "SELECT * FROM goods";
-        List<Good> goods = template.query(sql, Good.getRowMapper());
+        List< Good > goods = template.query(sql, Good.getRowMapper());
         goods.sort(cmp);
         return goods;
     }

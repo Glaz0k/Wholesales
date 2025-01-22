@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
 @AllArgsConstructor
+@Service
 public class GoodsServiceDB implements IGoodsService {
 
     private final GoodsDAO dao;
@@ -36,7 +36,7 @@ public class GoodsServiceDB implements IGoodsService {
     }
 
     @Override
-    public List<Good> readGoodsByFilter(Comparator< ? super Good > cmp) {
+    public List< Good > readGoodsByFilter(Comparator< ? super Good > cmp) {
         return dao.readGoodsByFilter(cmp);
     }
 }
