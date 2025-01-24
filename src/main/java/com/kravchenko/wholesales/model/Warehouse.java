@@ -6,13 +6,9 @@ import lombok.NonNull;
 
 @Data
 @Builder
-public class WarehouseRecord {
+public class Warehouse {
 
     @NonNull
     private Long id;
-    @NonNull
-    private Long good_id;
-    @NonNull
-    private Long good_count;
 
 }
