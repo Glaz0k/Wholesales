@@ -1,11 +1,11 @@
 package com.kravchenko.wholesales.controller;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Good;
 import com.kravchenko.wholesales.service.IGoodsService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -16,7 +16,7 @@ public class GoodsController {
     private final IGoodsService goodsService;
 
     @PostMapping
-    public Long create(@RequestBody Good good) {
+    public Good create(@RequestBody Good good) {
         return goodsService.createGood(good);
     }
 
@@ -26,8 +26,8 @@ public class GoodsController {
     }
 
     @PutMapping
-    public void update(@RequestBody Good good) {
-        goodsService.updateGood(good);
+    public Good update(@RequestBody Good good) {
+        return goodsService.updateGood(good);
     }
 
     @DeleteMapping("/{id}")
@@ -36,9 +36,8 @@ public class GoodsController {
     }
 
     @GetMapping
-    public List< Good > readByFilter(@RequestParam(defaultValue = "ID") String sortBy,
-                                     @RequestParam(defaultValue = "true") boolean sortAsc) {
-        Comparator< ? super Good > cmp = Good.getComparator(sortBy);
-        return goodsService.readGoodsByFilter((sortAsc) ? cmp : cmp.reversed());
+    public List< Good > readAllFiltered(@RequestParam String sortBy,
+                                        @RequestParam SortOrder sortOrder) {
+        return goodsService.readAllGoodsFiltered(sortBy, sortOrder);
     }
 }

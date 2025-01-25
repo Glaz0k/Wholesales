@@ -1,12 +1,12 @@
 package com.kravchenko.wholesales.service.impl;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Good;
 import com.kravchenko.wholesales.repository.GoodsDAO;
 import com.kravchenko.wholesales.service.IGoodsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class GoodsServiceDB implements IGoodsService {
     private final GoodsDAO dao;
 
     @Override
-    public Long createGood(Good good) {
+    public Good createGood(Good good) {
         return dao.createGood(good);
     }
 
@@ -26,8 +26,8 @@ public class GoodsServiceDB implements IGoodsService {
     }
 
     @Override
-    public void updateGood(Good good) {
-        dao.updateGood(good);
+    public Good updateGood(Good good) {
+        return dao.updateGood(good);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GoodsServiceDB implements IGoodsService {
     }
 
     @Override
-    public List< Good > readGoodsByFilter(Comparator< ? super Good > cmp) {
-        return dao.readGoodsByFilter(cmp);
+    public List< Good > readAllGoodsFiltered(String sortColumn, SortOrder order) {
+        return dao.readAllGoodsFiltered(sortColumn, order);
     }
 }

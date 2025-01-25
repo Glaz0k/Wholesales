@@ -1,7 +1,10 @@
 package com.kravchenko.wholesales.repository;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Good;
+import com.kravchenko.wholesales.repository.queries.SelectQuery;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,33 +19,34 @@ public class GoodsDAO {
 
     private final NamedParameterJdbcTemplate template;
 
-    public Long createGood(Good good) {
+    public Good createGood(Good good) {
         String sql = "INSERT INTO goods (id, name, priority)" +
-                "VALUES (:id, :name, :priority)" +
-                "RETURNING id";
+                "VALUES (:id, :name, :priority)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", good.getId())
-                .addValue("name", good.getName())
-                .addValue("priority", good.getPriority());
-        return template.queryForObject(sql, parameterSource, Long.class);
+                .addValue("id", good.id())
+                .addValue("name", good.name())
+                .addValue("priority", good.priority());
+        template.update(sql, parameterSource);
+        return good;
     }
 
     public Good readGoodById(long id) {
         String sql = "SELECT * FROM goods " +
                 "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
-        return template.queryForObject(sql, parameterSource, Good.getRowMapper());
+        return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Good.class));
     }
 
-    public void updateGood(Good good) {
+    public Good updateGood(Good good) {
         String sql = "UPDATE goods " +
                 "SET name = :name, priority = :priority " +
                 "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", good.getId())
-                .addValue("name", good.getName())
-                .addValue("priority", good.getPriority());
+                .addValue("id", good.id())
+                .addValue("name", good.name())
+                .addValue("priority", good.priority());
         template.update(sql, parameterSource);
+        return good;
     }
 
     public void deleteGoodById(long id) {
@@ -52,10 +56,12 @@ public class GoodsDAO {
         template.update(sql, parameterSource);
     }
 
-    public List< Good > readGoodsByFilter(Comparator< ? super Good > cmp) {
-        String sql = "SELECT * FROM goods";
-        List< Good > goods = template.query(sql, Good.getRowMapper());
-        goods.sort(cmp);
-        return goods;
+    public List< Good > readAllGoodsFiltered(String sortColumn, SortOrder order) {
+        String sql = SelectQuery.builder()
+                .table("goods")
+                .sortBy(sortColumn)
+                .sortOrder(order.toString())
+                .build().toString();
+        return template.query(sql, new DataClassRowMapper<>(Good.class));
     }
 }
