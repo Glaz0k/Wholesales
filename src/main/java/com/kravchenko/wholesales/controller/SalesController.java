@@ -1,11 +1,11 @@
 package com.kravchenko.wholesales.controller;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
 import com.kravchenko.wholesales.service.ISalesService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -16,7 +16,7 @@ public class SalesController {
     private final ISalesService salesService;
 
     @PostMapping
-    public Long create(@RequestBody Sale sale) {
+    public Sale create(@RequestBody Sale sale) {
         return salesService.createSale(sale);
     }
 
@@ -26,8 +26,8 @@ public class SalesController {
     }
 
     @PutMapping
-    public void update(@RequestBody Sale sale) {
-        salesService.updateSale(sale);
+    public Sale update(@RequestBody Sale sale) {
+        return salesService.updateSale(sale);
     }
 
     @DeleteMapping("/{id}")
@@ -36,9 +36,8 @@ public class SalesController {
     }
 
     @GetMapping
-    public List< Sale > readByFilter(@RequestParam(defaultValue = "ID") String sortBy,
-                                     @RequestParam(defaultValue = "true") boolean sortAsc) {
-        Comparator< ? super Sale > cmp = Sale.getComparator(sortBy);
-        return salesService.readSalesByFilter((sortAsc) ? cmp : cmp.reversed());
+    public List< Sale > readByFilter(@RequestParam String sortBy,
+                                     @RequestParam SortOrder sortOrder) {
+        return salesService.readAllSalesFiltered(sortBy, sortOrder);
     }
 }

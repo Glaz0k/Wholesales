@@ -60,7 +60,7 @@ public class GoodsDAO {
         String sql = SelectQuery.builder()
                 .table("goods")
                 .sortBy(sortColumn)
-                .sortOrder(order.toString())
+                .sortOrder(order)
                 .build().toString();
         return template.query(sql, new DataClassRowMapper<>(Good.class));
     }

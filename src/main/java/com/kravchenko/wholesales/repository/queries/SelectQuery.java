@@ -1,5 +1,6 @@
 package com.kravchenko.wholesales.repository.queries;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;
@@ -14,7 +15,7 @@ public class SelectQuery {
     private final String table;
     private final String[] columns;
     private final String sortBy;
-    private final String sortOrder;
+    private final SortOrder sortOrder;
 
     @Override
     public String toString() {

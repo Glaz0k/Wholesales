@@ -1,7 +1,10 @@
 package com.kravchenko.wholesales.repository;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
+import com.kravchenko.wholesales.repository.queries.SelectQuery;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,35 +19,37 @@ public class SalesDAO {
 
     private final NamedParameterJdbcTemplate template;
 
-    public Long createSale(Sale sale) {
+    public Sale createSale(Sale sale) {
         String sql = "INSERT INTO sales (id, good_id, good_count, create_date)" +
                 "VALUES (:id, :good_id, :good_count, :create_date)" +
                 "RETURNING id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", sale.getId())
-                .addValue("good_id", sale.getGood_id())
-                .addValue("good_count", sale.getGood_count())
-                .addValue("create_date", sale.getCreate_date());
-        return template.queryForObject(sql, parameterSource, Long.class);
+                .addValue("id", sale.id())
+                .addValue("good_id", sale.good_id())
+                .addValue("good_count", sale.good_count())
+                .addValue("create_date", sale.create_date());
+        template.update(sql, parameterSource);
+        return sale;
     }
 
     public Sale readSaleById(long id) {
         String sql = "SELECT * FROM sales " +
                 "WHERE salas.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
-        return template.queryForObject(sql, parameterSource, Sale.getRowMapper());
+        return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Sale.class));
     }
 
-    public void updateSale(Sale sale) {
+    public Sale updateSale(Sale sale) {
         String sql = "UPDATE sales " +
                 "SET good_id = :good_id, good_count = :good_count, create_date = :create_date " +
                 "WHERE sales.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", sale.getId())
-                .addValue("good_id", sale.getGood_id())
-                .addValue("good_count", sale.getGood_count())
-                .addValue("create_date", sale.getCreate_date());
+                .addValue("id", sale.id())
+                .addValue("good_id", sale.good_id())
+                .addValue("good_count", sale.good_count())
+                .addValue("create_date", sale.create_date());
         template.update(sql, parameterSource);
+        return sale;
     }
 
     public void deleteSaleById(long id) {
@@ -54,8 +59,12 @@ public class SalesDAO {
         template.update(sql, parameterSource);
     }
 
-    public List< Sale > readSaleByFilter(Comparator< ? super Sale > cmp) {
-        String sql = "SELECT * FROM sales";
-        return template.query(sql, Sale.getRowMapper());
+    public List< Sale > readSaleByFilter(String sortColumn, SortOrder order) {
+        String sql = SelectQuery.builder()
+                .table("sales")
+                .sortBy(sortColumn)
+                .sortOrder(order)
+                .build().toString();
+        return template.query(sql, new DataClassRowMapper<>(Sale.class));
     }
 }

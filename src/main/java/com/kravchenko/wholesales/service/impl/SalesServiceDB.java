@@ -1,5 +1,6 @@
 package com.kravchenko.wholesales.service.impl;
 
+import com.kravchenko.wholesales.constants.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
 import com.kravchenko.wholesales.repository.SalesDAO;
 import com.kravchenko.wholesales.service.ISalesService;
@@ -16,7 +17,7 @@ public class SalesServiceDB implements ISalesService {
     private final SalesDAO repository;
 
     @Override
-    public Long createSale(Sale sale) {
+    public Sale createSale(Sale sale) {
         return repository.createSale(sale);
     }
 
@@ -26,8 +27,8 @@ public class SalesServiceDB implements ISalesService {
     }
 
     @Override
-    public void updateSale(Sale sale) {
-        repository.updateSale(sale);
+    public Sale updateSale(Sale sale) {
+        return repository.updateSale(sale);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class SalesServiceDB implements ISalesService {
     }
 
     @Override
-    public List< Sale > readSalesByFilter(Comparator< ? super Sale > cmp) {
-        return repository.readSaleByFilter(cmp);
+    public List< Sale > readAllSalesFiltered(String sortColumn, SortOrder order) {
+        return repository.readSaleByFilter(sortColumn, order);
     }
 }
