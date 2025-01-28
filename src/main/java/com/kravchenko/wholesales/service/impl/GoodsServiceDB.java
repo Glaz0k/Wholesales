@@ -1,42 +1,42 @@
 package com.kravchenko.wholesales.service.impl;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
 import com.kravchenko.wholesales.model.Good;
-import com.kravchenko.wholesales.repository.GoodsDAO;
+import com.kravchenko.wholesales.repository.IGoodsDAO;
 import com.kravchenko.wholesales.service.IGoodsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class GoodsServiceDB implements IGoodsService {
 
-    private final GoodsDAO dao;
+    private final IGoodsDAO repository;
 
     @Override
     public Good createGood(Good good) {
-        return dao.createGood(good);
+        return repository.createGood(good);
     }
 
     @Override
     public Good readGoodById(long id) {
-        return dao.readGoodById(id);
+        return repository.readGoodById(id);
     }
 
     @Override
     public Good updateGood(Good good) {
-        return dao.updateGood(good);
+        return repository.updateGood(good);
     }
 
     @Override
     public void deleteGoodById(long id) {
-        dao.deleteGoodById(id);
+        repository.deleteGoodById(id);
     }
 
     @Override
-    public List< Good > readAllGoodsFiltered(String sortColumn, SortOrder order) {
-        return dao.readAllGoodsFiltered(sortColumn, order);
+    public List< Good > readAllGoodsSorted(String sortCol, SortOrder sortOrder) {
+        return repository.readAllGoodsSorted(sortCol, sortOrder);
     }
 }

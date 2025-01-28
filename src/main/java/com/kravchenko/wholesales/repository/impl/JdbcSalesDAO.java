@@ -1,8 +1,8 @@
-package com.kravchenko.wholesales.repository;
+package com.kravchenko.wholesales.repository.impl;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
-import com.kravchenko.wholesales.repository.queries.SelectQuery;
+import com.kravchenko.wholesales.repository.ISalesDAO;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,14 +14,14 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class SalesDAO {
+public class JdbcSalesDAO implements ISalesDAO {
 
     private final NamedParameterJdbcTemplate template;
 
+    @Override
     public Sale createSale(Sale sale) {
         String sql = "INSERT INTO sales (id, good_id, good_count, create_date)" +
-                "VALUES (:id, :good_id, :good_count, :create_date)" +
-                "RETURNING id";
+                "VALUES (:id, :good_id, :good_count, :create_date)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", sale.id())
                 .addValue("good_id", sale.good_id())
@@ -31,6 +31,7 @@ public class SalesDAO {
         return sale;
     }
 
+    @Override
     public Sale readSaleById(long id) {
         String sql = "SELECT * FROM sales " +
                 "WHERE salas.id = :id";
@@ -38,6 +39,7 @@ public class SalesDAO {
         return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Sale.class));
     }
 
+    @Override
     public Sale updateSale(Sale sale) {
         String sql = "UPDATE sales " +
                 "SET good_id = :good_id, good_count = :good_count, create_date = :create_date " +
@@ -51,6 +53,7 @@ public class SalesDAO {
         return sale;
     }
 
+    @Override
     public void deleteSaleById(long id) {
         String sql = "DELETE FROM sales " +
                 "WHERE sales.id = :id";
@@ -58,12 +61,10 @@ public class SalesDAO {
         template.update(sql, parameterSource);
     }
 
-    public List< Sale > readSaleByFilter(String sortColumn, SortOrder order) {
-        String sql = SelectQuery.builder()
-                .table("sales")
-                .sortBy(sortColumn)
-                .sortOrder(order)
-                .build().toString();
+    @Override
+    public List< Sale > readAllSalesSorted(String sortCol, SortOrder sortOrder) {
+        String sql = "SELECT * FROM sales " +
+                "ORDER BY " + sortCol + " " + sortOrder.toString();
         return template.query(sql, new DataClassRowMapper<>(Sale.class));
     }
 }

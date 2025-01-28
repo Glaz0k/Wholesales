@@ -1,8 +1,8 @@
-package com.kravchenko.wholesales.repository;
+package com.kravchenko.wholesales.repository.impl;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
 import com.kravchenko.wholesales.model.Good;
-import com.kravchenko.wholesales.repository.queries.SelectQuery;
+import com.kravchenko.wholesales.repository.IGoodsDAO;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,10 +14,11 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class GoodsDAO {
+public class JdbcGoodsDAO implements IGoodsDAO {
 
     private final NamedParameterJdbcTemplate template;
 
+    @Override
     public Good createGood(Good good) {
         String sql = "INSERT INTO goods (id, name, priority)" +
                 "VALUES (:id, :name, :priority)";
@@ -29,6 +30,7 @@ public class GoodsDAO {
         return good;
     }
 
+    @Override
     public Good readGoodById(long id) {
         String sql = "SELECT * FROM goods " +
                 "WHERE goods.id = :id";
@@ -36,6 +38,7 @@ public class GoodsDAO {
         return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Good.class));
     }
 
+    @Override
     public Good updateGood(Good good) {
         String sql = "UPDATE goods " +
                 "SET name = :name, priority = :priority " +
@@ -48,6 +51,7 @@ public class GoodsDAO {
         return good;
     }
 
+    @Override
     public void deleteGoodById(long id) {
         String sql = "DELETE FROM goods " +
                 "WHERE goods.id = :id";
@@ -55,12 +59,10 @@ public class GoodsDAO {
         template.update(sql, parameterSource);
     }
 
-    public List< Good > readAllGoodsFiltered(String sortColumn, SortOrder order) {
-        String sql = SelectQuery.builder()
-                .table("goods")
-                .sortBy(sortColumn)
-                .sortOrder(order)
-                .build().toString();
+    @Override
+    public List< Good > readAllGoodsSorted(String sortCol, SortOrder sortOrder) {
+        String sql = "SELECT * FROM goods" +
+                "ORDER BY " + sortCol + " " + sortOrder.name();
         return template.query(sql, new DataClassRowMapper<>(Good.class));
     }
 }

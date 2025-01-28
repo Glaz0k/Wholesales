@@ -1,8 +1,8 @@
 package com.kravchenko.wholesales.service.impl;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
-import com.kravchenko.wholesales.repository.SalesDAO;
+import com.kravchenko.wholesales.repository.ISalesDAO;
 import com.kravchenko.wholesales.service.ISalesService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SalesServiceDB implements ISalesService {
 
-    private final SalesDAO repository;
+    private final ISalesDAO repository;
 
     @Override
     public Sale createSale(Sale sale) {
@@ -36,7 +36,7 @@ public class SalesServiceDB implements ISalesService {
     }
 
     @Override
-    public List< Sale > readAllSalesFiltered(String sortColumn, SortOrder order) {
-        return repository.readSaleByFilter(sortColumn, order);
+    public List< Sale > readAllSalesSorted(String sortCol, SortOrder sortOrder) {
+        return repository.readAllSalesSorted(sortCol, sortOrder);
     }
 }

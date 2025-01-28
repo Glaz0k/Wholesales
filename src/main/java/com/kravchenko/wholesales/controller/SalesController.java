@@ -1,6 +1,6 @@
 package com.kravchenko.wholesales.controller;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
 import com.kravchenko.wholesales.model.Sale;
 import com.kravchenko.wholesales.service.ISalesService;
 import lombok.AllArgsConstructor;
@@ -36,8 +36,8 @@ public class SalesController {
     }
 
     @GetMapping
-    public List< Sale > readByFilter(@RequestParam String sortBy,
-                                     @RequestParam SortOrder sortOrder) {
-        return salesService.readAllSalesFiltered(sortBy, sortOrder);
+    public List< Sale > readAllSorted(@RequestParam(defaultValue = "id") String sortCol,
+                                      @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
+        return salesService.readAllSalesSorted(sortCol, sortOrder);
     }
 }
