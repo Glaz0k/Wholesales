@@ -1,4 +1,4 @@
-package com.kravchenko.wholesales.constants;
+package com.kravchenko.wholesales.enums;
 
 import lombok.AllArgsConstructor;
 

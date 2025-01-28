@@ -1,8 +1,8 @@
 package com.kravchenko.wholesales.controller;
 
-import com.kravchenko.wholesales.constants.SortOrder;
+import com.kravchenko.wholesales.enums.SortOrder;
+import com.kravchenko.wholesales.model.Entry;
 import com.kravchenko.wholesales.model.Warehouse;
-import com.kravchenko.wholesales.model.GoodRecord;
 import com.kravchenko.wholesales.service.IWarehousesService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,34 +18,35 @@ public class WarehousesController {
 
     @PostMapping
     public Warehouse create(@RequestBody Warehouse warehouse) {
-        return null;
+        return warehousesService.createWarehouse(warehouse);
     }
 
     @GetMapping("/{id}")
     public Warehouse readById(@PathVariable long id) {
-        return null;
+        return warehousesService.readWarehouseById(id);
     }
 
     @PutMapping
     public Warehouse update(@RequestBody Warehouse warehouse) {
-        return null;
+        return warehousesService.updateWarehouse(warehouse);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {
-
+        warehousesService.deleteWarehouseById(id);
     }
 
     @GetMapping
-    public List< Warehouse > readAll() {
-        return null;
+    public List< Warehouse > readAllSorted(@RequestParam(defaultValue = "id") String sortCol,
+                                           @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
+        return warehousesService.readAllWarehousesSorted(sortCol, sortOrder);
     }
 
-    @GetMapping("/{id}/records")
-    public List< GoodRecord > readRecordsBy(@PathVariable long id,
-                                            @RequestParam(defaultValue = "ID") String orderBy,
-                                            @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
-        return null;
+    @GetMapping("/{id}/entries")
+    public List< Entry > readAllEntriesSorted(@PathVariable long id,
+                                              @RequestParam(defaultValue = "id") String sortCol,
+                                              @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
+        return warehousesService.readAllEntriesSorted(id, sortCol, sortOrder);
     }
 
 }

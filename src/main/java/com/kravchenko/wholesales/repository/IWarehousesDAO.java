@@ -1,12 +1,11 @@
-package com.kravchenko.wholesales.service;
+package com.kravchenko.wholesales.repository;
 
 import com.kravchenko.wholesales.enums.SortOrder;
-import com.kravchenko.wholesales.model.Entry;
 import com.kravchenko.wholesales.model.Warehouse;
 
 import java.util.List;
 
-public interface IWarehousesService {
+public interface IWarehousesDAO {
 
     Warehouse createWarehouse(Warehouse warehouse);
 
@@ -18,5 +17,4 @@ public interface IWarehousesService {
 
     List< Warehouse > readAllWarehousesSorted(String sortCol, SortOrder sortOrder);
 
-    List< Entry > readAllEntriesSorted(long warehouseId, String sortCol, SortOrder sortOrder);
 }
