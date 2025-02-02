@@ -21,9 +21,9 @@ public class JdbcWarehousesDAO implements IWarehousesDAO {
     @Override
     public Warehouse createWarehouse(Warehouse warehouse) {
         String sql = "INSERT INTO warehouses (id) " +
-                "VALUES (:id)";
+            "VALUES (:id)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", warehouse.id());
+            .addValue("id", warehouse.id());
         template.update(sql, parameterSource);
         return warehouse;
     }
@@ -31,7 +31,7 @@ public class JdbcWarehousesDAO implements IWarehousesDAO {
     @Override
     public Warehouse readWarehouseById(long id) {
         String sql = "SELECT * FROM warehouses " +
-                "WHERE warehouses.id = :id";
+            "WHERE warehouses.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Warehouse.class));
     }
@@ -39,9 +39,9 @@ public class JdbcWarehousesDAO implements IWarehousesDAO {
     @Override
     public Warehouse updateWarehouse(Warehouse warehouse) {
         String sql = "UPDATE warehouses " +
-                "WHERE warehouses.id = :id";
+            "WHERE warehouses.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", warehouse.id());
+            .addValue("id", warehouse.id());
         if (template.update(sql, parameterSource) == 0) {
             return createWarehouse(warehouse);
         }
@@ -51,7 +51,7 @@ public class JdbcWarehousesDAO implements IWarehousesDAO {
     @Override
     public void deleteWarehouseById(long id) {
         String sql = "DELETE FROM warehouses " +
-                "WHERE warehouses.id = :id";
+            "WHERE warehouses.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         template.update(sql, parameterSource);
     }
@@ -59,8 +59,8 @@ public class JdbcWarehousesDAO implements IWarehousesDAO {
     @Override
     public List< Warehouse > readAllWarehousesSorted(String sortCol, SortOrder sortOrder) {
         String sql = "SELECT * FROM warehouses " +
-                "ORDER BY " + sortCol +
-                ' ' + sortOrder.toString();
+            "ORDER BY " + sortCol +
+            ' ' + sortOrder.toString();
         return template.query(sql, new DataClassRowMapper<>(Warehouse.class));
     }
 

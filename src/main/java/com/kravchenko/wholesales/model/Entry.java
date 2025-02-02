@@ -5,10 +5,10 @@ import lombok.NonNull;
 
 @Builder
 public record Entry(
-        @NonNull Long id,
-        @NonNull Long warehouse_id,
-        @NonNull Long good_id,
-        @NonNull Long good_count
+    @NonNull Long id,
+    @NonNull Long warehouse_id,
+    @NonNull Long good_id,
+    @NonNull Long good_count
 ) {
 
 }

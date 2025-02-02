@@ -21,12 +21,12 @@ public class JdbcSalesDAO implements ISalesDAO {
     @Override
     public Sale createSale(Sale sale) {
         String sql = "INSERT INTO sales (id, good_id, good_count, create_date)" +
-                "VALUES (:id, :good_id, :good_count, :create_date)";
+            "VALUES (:id, :good_id, :good_count, :create_date)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", sale.id())
-                .addValue("good_id", sale.good_id())
-                .addValue("good_count", sale.good_count())
-                .addValue("create_date", sale.create_date());
+            .addValue("id", sale.id())
+            .addValue("good_id", sale.good_id())
+            .addValue("good_count", sale.good_count())
+            .addValue("create_date", sale.create_date());
         template.update(sql, parameterSource);
         return sale;
     }
@@ -34,7 +34,7 @@ public class JdbcSalesDAO implements ISalesDAO {
     @Override
     public Sale readSaleById(long id) {
         String sql = "SELECT * FROM sales " +
-                "WHERE salas.id = :id";
+            "WHERE salas.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Sale.class));
     }
@@ -42,13 +42,13 @@ public class JdbcSalesDAO implements ISalesDAO {
     @Override
     public Sale updateSale(Sale sale) {
         String sql = "UPDATE sales " +
-                "SET good_id = :good_id, good_count = :good_count, create_date = :create_date " +
-                "WHERE sales.id = :id";
+            "SET good_id = :good_id, good_count = :good_count, create_date = :create_date " +
+            "WHERE sales.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", sale.id())
-                .addValue("good_id", sale.good_id())
-                .addValue("good_count", sale.good_count())
-                .addValue("create_date", sale.create_date());
+            .addValue("id", sale.id())
+            .addValue("good_id", sale.good_id())
+            .addValue("good_count", sale.good_count())
+            .addValue("create_date", sale.create_date());
         template.update(sql, parameterSource);
         return sale;
     }
@@ -56,7 +56,7 @@ public class JdbcSalesDAO implements ISalesDAO {
     @Override
     public void deleteSaleById(long id) {
         String sql = "DELETE FROM sales " +
-                "WHERE sales.id = :id";
+            "WHERE sales.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         template.update(sql, parameterSource);
     }
@@ -64,7 +64,7 @@ public class JdbcSalesDAO implements ISalesDAO {
     @Override
     public List< Sale > readAllSalesSorted(String sortCol, SortOrder sortOrder) {
         String sql = "SELECT * FROM sales " +
-                "ORDER BY " + sortCol + " " + sortOrder.toString();
+            "ORDER BY " + sortCol + " " + sortOrder.toString();
         return template.query(sql, new DataClassRowMapper<>(Sale.class));
     }
 }

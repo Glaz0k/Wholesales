@@ -5,7 +5,7 @@ import lombok.NonNull;
 
 @Builder
 public record Warehouse(
-        @NonNull Long id
+    @NonNull Long id
 ) {
 
 }

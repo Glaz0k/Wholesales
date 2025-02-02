@@ -7,10 +7,10 @@ import java.sql.Timestamp;
 
 @Builder
 public record Sale(
-        @NonNull Long id,
-        @NonNull Long good_id,
-        @NonNull Long good_count,
-        @NonNull Timestamp create_date
+    @NonNull Long id,
+    @NonNull Long good_id,
+    @NonNull Long good_count,
+    @NonNull Timestamp create_date
 ) {
 
 }

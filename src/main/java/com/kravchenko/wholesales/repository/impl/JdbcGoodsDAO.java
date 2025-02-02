@@ -21,11 +21,11 @@ public class JdbcGoodsDAO implements IGoodsDAO {
     @Override
     public Good createGood(Good good) {
         String sql = "INSERT INTO goods (id, name, priority)" +
-                "VALUES (:id, :name, :priority)";
+            "VALUES (:id, :name, :priority)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", good.id())
-                .addValue("name", good.name())
-                .addValue("priority", good.priority());
+            .addValue("id", good.id())
+            .addValue("name", good.name())
+            .addValue("priority", good.priority());
         template.update(sql, parameterSource);
         return good;
     }
@@ -33,7 +33,7 @@ public class JdbcGoodsDAO implements IGoodsDAO {
     @Override
     public Good readGoodById(long id) {
         String sql = "SELECT * FROM goods " +
-                "WHERE goods.id = :id";
+            "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         return template.queryForObject(sql, parameterSource, new DataClassRowMapper<>(Good.class));
     }
@@ -41,12 +41,12 @@ public class JdbcGoodsDAO implements IGoodsDAO {
     @Override
     public Good updateGood(Good good) {
         String sql = "UPDATE goods " +
-                "SET name = :name, priority = :priority " +
-                "WHERE goods.id = :id";
+            "SET name = :name, priority = :priority " +
+            "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", good.id())
-                .addValue("name", good.name())
-                .addValue("priority", good.priority());
+            .addValue("id", good.id())
+            .addValue("name", good.name())
+            .addValue("priority", good.priority());
         template.update(sql, parameterSource);
         return good;
     }
@@ -54,15 +54,15 @@ public class JdbcGoodsDAO implements IGoodsDAO {
     @Override
     public void deleteGoodById(long id) {
         String sql = "DELETE FROM goods " +
-                "WHERE goods.id = :id";
+            "WHERE goods.id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
         template.update(sql, parameterSource);
     }
 
     @Override
     public List< Good > readAllGoodsSorted(String sortCol, SortOrder sortOrder) {
-        String sql = "SELECT * FROM goods" +
-                "ORDER BY " + sortCol + " " + sortOrder.name();
+        String sql = "SELECT * FROM goods " +
+            "ORDER BY " + sortCol + " " + sortOrder.name();
         return template.query(sql, new DataClassRowMapper<>(Good.class));
     }
 }
