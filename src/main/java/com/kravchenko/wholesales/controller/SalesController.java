@@ -1,33 +1,40 @@
 package com.kravchenko.wholesales.controller;
 
-import com.kravchenko.wholesales.enums.SortOrder;
-import com.kravchenko.wholesales.model.Sale;
-import com.kravchenko.wholesales.service.ISalesService;
-import lombok.AllArgsConstructor;
+import com.kravchenko.wholesales.dto.SaleCreateDTO;
+import com.kravchenko.wholesales.dto.SaleDTO;
+import com.kravchenko.wholesales.dto.SaleUpdateDTO;
+import com.kravchenko.wholesales.service.SalesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/sales")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SalesController {
 
-    private final ISalesService salesService;
+    private final SalesService salesService;
 
     @PostMapping
-    public Sale create(@RequestBody Sale sale) {
+    public SaleDTO create(@RequestBody SaleCreateDTO sale) {
         return salesService.createSale(sale);
     }
 
     @GetMapping("/{id}")
-    public Sale readById(@PathVariable long id) {
-        return salesService.readSaleById(id);
+    public SaleDTO readById(@PathVariable long id) {
+        return salesService.findSaleById(id).orElse(null);
     }
 
-    @PutMapping
-    public Sale update(@RequestBody Sale sale) {
-        return salesService.updateSale(sale);
+    @PutMapping("/{id}")
+    public void update(@PathVariable long id,
+                       @RequestBody SaleCreateDTO sale) {
+        SaleUpdateDTO dto = new SaleUpdateDTO(id, sale.goodId(), sale.goodCount());
+        if (!salesService.updateSale(dto)) {
+            throw new ResponseStatusException(HttpStatus.CREATED);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -36,8 +43,7 @@ public class SalesController {
     }
 
     @GetMapping
-    public List< Sale > readAllSorted(@RequestParam(defaultValue = "id") String sortCol,
-                                      @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
-        return salesService.readAllSalesSorted(sortCol, sortOrder);
+    public List< SaleDTO > readAll() {
+        return salesService.getAllSales();
     }
 }

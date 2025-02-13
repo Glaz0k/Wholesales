@@ -1,33 +1,39 @@
 package com.kravchenko.wholesales.controller;
 
-import com.kravchenko.wholesales.enums.SortOrder;
-import com.kravchenko.wholesales.model.Good;
-import com.kravchenko.wholesales.service.IGoodsService;
-import lombok.AllArgsConstructor;
+import com.kravchenko.wholesales.dto.GoodCreateDTO;
+import com.kravchenko.wholesales.dto.GoodDTO;
+import com.kravchenko.wholesales.service.GoodsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/goods")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GoodsController {
 
-    private final IGoodsService goodsService;
+    private final GoodsService goodsService;
 
     @PostMapping
-    public Good create(@RequestBody Good good) {
+    public GoodDTO create(@RequestBody GoodCreateDTO good) {
         return goodsService.createGood(good);
     }
 
     @GetMapping("/{id}")
-    public Good readById(@PathVariable long id) {
-        return goodsService.readGoodById(id);
+    public GoodDTO readById(@PathVariable long id) {
+        return goodsService.findGoodById(id).orElse(null);
     }
 
-    @PutMapping
-    public Good update(@RequestBody Good good) {
-        return goodsService.updateGood(good);
+    @PutMapping("/{id}")
+    public void update(@PathVariable long id,
+                       @RequestBody GoodCreateDTO good) {
+        GoodDTO dto = new GoodDTO(id, good.name(), good.priority());
+        if (!goodsService.updateGood(dto)) {
+            throw new ResponseStatusException(HttpStatus.CREATED);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -36,8 +42,7 @@ public class GoodsController {
     }
 
     @GetMapping
-    public List< Good > readAllSorted(@RequestParam(defaultValue = "id") String sortCol,
-                                      @RequestParam(defaultValue = "ASC") SortOrder sortOrder) {
-        return goodsService.readAllGoodsSorted(sortCol, sortOrder);
+    public List< GoodDTO > readAll() {
+        return goodsService.getAllGoods();
     }
 }

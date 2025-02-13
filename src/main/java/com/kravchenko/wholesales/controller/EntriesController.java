@@ -1,30 +1,38 @@
 package com.kravchenko.wholesales.controller;
 
-import com.kravchenko.wholesales.model.Entry;
-import com.kravchenko.wholesales.service.IEntriesService;
-import lombok.AllArgsConstructor;
+import com.kravchenko.wholesales.dto.EntryCreateDTO;
+import com.kravchenko.wholesales.dto.EntryDTO;
+import com.kravchenko.wholesales.dto.EntryUpdateDTO;
+import com.kravchenko.wholesales.service.EntriesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/entries")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EntriesController {
 
-    private final IEntriesService entriesService;
+    private final EntriesService entriesService;
 
     @PostMapping
-    public Entry create(@RequestBody Entry entry) {
+    public EntryDTO create(@RequestBody EntryCreateDTO entry) {
         return entriesService.createEntry(entry);
     }
 
     @GetMapping("/{id}")
-    public Entry readById(@PathVariable long id) {
-        return entriesService.readEntryById(id);
+    public EntryDTO readById(@PathVariable long id) {
+        return entriesService.findEntryById(id).orElse(null);
     }
 
-    @PutMapping
-    public Entry update(@RequestBody Entry entry) {
-        return entriesService.updateEntry(entry);
+    @PutMapping("/{id}")
+    public void update(@PathVariable long id,
+                       @RequestBody EntryCreateDTO entry) {
+        EntryUpdateDTO dto = new EntryUpdateDTO(id, entry.warehouseId(), entry.goodId(), entry.goodCount());
+        if (!entriesService.updateEntry(dto)) {
+            throw new ResponseStatusException(HttpStatus.CREATED);
+        }
     }
 
     @DeleteMapping("/{id}")
